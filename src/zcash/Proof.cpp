@@ -242,41 +242,38 @@ bool ProofVerifier::check(
 )
 {
     unsigned icLength = vk.encoded_IC_query.rest.indices.size() + 1;
-    std::cout << "\tvk.A = " ;  vk.alphaA_g2.print();
-    std::cout << "\tvk.B = " ;  vk.alphaB_g1.print();
-    std::cout << "\tvk.C = " ;  vk.alphaC_g2.print(); 
-    std::cout << "\tvk.gamma = " ; vk.gamma_g2.print();
-    std::cout << "\tvk.gammaBeta1 = " ; vk.gamma_beta_g1.print();
-    std::cout << "\tvk.gammaBeta2 = " ; vk.gamma_beta_g2.print();
-    std::cout << "\tvk.Z = " ; vk.rC_Z_g2.print();
+    std::cout << "\tfunction verify(uint[] input, Proof proof) internal returns (int) {\n";
+    std::cout << "\tvk.A = Pairing.G2Point" ;  vk.alphaA_g2.print();
+    std::cout << "\tvk.B = Pairing.G1Point" ;  vk.alphaB_g1.print();
+    std::cout << "\tvk.C = Pairing.G2Point" ;  vk.alphaC_g2.print(); 
+    std::cout << "\tvk.gamma = Pairing.G2Point" ; vk.gamma_g2.print();
+    std::cout << "\tvk.gammaBeta1 = Pairing.G1Point" ; vk.gamma_beta_g1.print();
+    std::cout << "\tvk.gammaBeta2 = Pairing.G2Point" ; vk.gamma_beta_g2.print();
+    std::cout << "\tvk.Z = Pairing.G2Point" ; vk.rC_Z_g2.print();
     std::cout << "\tvk.IC = new Pairing.G1Point[](" << icLength  << ");\n";   
-    std::cout << "\tvk.IC[0] = "                    ; vk.encoded_IC_query.first.print();
+    std::cout << "\tvk.IC[0] = Pairing.G1Point"                    ; vk.encoded_IC_query.first.print();
     for (size_t i = 1; i < icLength; ++i) {
        auto vkICi = vk.encoded_IC_query.rest.values[i - 1];
         std::cout << "\tvk.IC[" << i << "] = " ; vkICi.print();   
     }
     std::cout << "\tVerified('VK loaded successfully')" << ";\n";
     std::cout << "\t}" << ";\n";
-
-
-    std::cout << "Proof g A g:" ;  proof.g_A.g.print();
-    std::cout << "Proof g A h:" ;  proof.g_A.h.print();
-    std::cout << "Proof g B g:" ;  proof.g_B.g.print();
-    std::cout << "Proof g B h:" ;  proof.g_B.h.print();
-    std::cout << "Proof g C g:" ;  proof.g_C.g.print();
-    std::cout << "Proof g C h:" ;  proof.g_C.h.print();
-    std::cout << "Proof g K:"   ;  proof.g_K.print();
-    std::cout << "Proof g H:"   ;  proof.g_H.print();
-
+    
+    std::cout << "proof.A = Pairing.G1Point" ;  proof.g_A.g.print();
+    std::cout << "proof.A_p = Pairing.G1Point" ;  proof.g_A.h.print();
+    std::cout << "proof.B = Pairing.G2Point" ;  proof.g_B.g.print();
+    std::cout << "proof.B_p = Pairing.G1Point" ;  proof.g_B.h.print();
+    std::cout << "proof.C = Pairing.G1Point" ;  proof.g_C.g.print();
+    std::cout << "proof.C_p = Pairing.G1Point" ;  proof.g_C.h.print();
+    std::cout << "proof.H = Pairing.G1Point"   ;  proof.g_K.print();
+    std::cout << "proof.K = Pairing.G1Point"   ;  proof.g_H.print();
 
     for (size_t i = 0 ; i < primary_input.size(); ++i){
 
         std::cout << "\tinput[" <<(i) << "] = "  ; primary_input[i-1].print()  ;
     }
-
-
+    
     if (perform_verification) {
-
         return r1cs_ppzksnark_online_verifier_strong_IC<curve_pp>(pvk, primary_input, proof);
     } else {
         return true;
